@@ -17,4 +17,17 @@ _
 * 对于每个patch, filter矩阵和image patch向量相乘。
 _
 
+## 一维卷积
+`tf.nn.conv1d(value,filters,stride,padding,use_cudnn_on_gpu=None,data_format=None,name=None)`
+其本质上是reshape输入的tensor并调用tf.nn.conv2d。
 
+1. 参数
+value: 3D tensor.类型必须为float32或float64。
+filters:3D tensor。必须与输入类型一致.
+stride： 整型。filter移动的步长.
+padding: 'SAME'或'VALID'
+data_format: 可从字符创'NHWC'和'NCHW'中选择。默认是'NHWC'，数据存储顺序为[batch,in_width,in_channels]。'NCHW'格式的数据为[batch,in_channel,in_width]
+name: 操作的名字.
+
+2.return：
+ A Tensor.卷积结果。
