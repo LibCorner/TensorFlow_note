@@ -1,4 +1,5 @@
 ## rnn_cell
+https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/ops/rnn_cell.py
 ```
 tensorflow实现rnn的基本神经元,包括BasicRNNCell，BasicLSTMCell，GRUCell, LSTMCell，和RNN Cell wrappers（RNNCells that wrap other RNNCells）,可以添加dropout,projection或embedding等操作。
 
@@ -30,10 +31,24 @@ def zero_state(self,batch_size,dtype)
 返回填充0的state tensor
 
 2. BasicRNNCell(RNNCell):最基本的RNN cell 
+* 定义方法：tf.nn.rnn_cell.BasicRNNCell(num_unites)
+* def __init__(self,num_units,input_size=None,activation=tanh)
 
 3. GRUCell(RNNCell): Gated Recurrent Unit cell
+* def __init__(self,num_units,input_size=None,activation=tanh) 
 
 4. BasicLSTMCell(RNNCell):基本的LSTM
+* 定义方法： lstm_cell=tf.nn.rnn_cell.BasicLSTMCell(size,forget_bias=0.0,state_is_tuple=True)
+* def __init__(self,num_units,forget_bias=1.0,input_size=None,state_is_tuple=True,activation=tanh):
+
+```
+参数
+num_units: int, LSTM cell中的神经元个数
+forget_bias: float, forget gates的bias
+input_size: Deprecated and unused
+state_is_tuple: 如果为True,接受和返回的states是2-tuples of the `c_state`和`m_state`。如果是false，they are concatenated along the column axis.
+activation: 激活函数
+```
 
 5. LSTMCell(RNNCell):
 ```
