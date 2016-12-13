@@ -2,7 +2,7 @@
 import tensorflow as tf
 import numpy as np
 
-ids=np.random.randint(5,10)
+ids=np.random.randint(low=0,high=1000,size=(10,10))
 emb=np.random.rand(1000,20)
 
 x=tf.placeholder(tf.int32,shape=[None,10])
