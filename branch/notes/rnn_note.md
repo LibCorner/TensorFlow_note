@@ -102,3 +102,10 @@ return (outputs,state)
 * scope: VariableScope for the created subgraph
 
 返回:(outputs,state)
+
+3. rnn的使用方法
+× 定义输入inputs
+* 定义单个神经元cell=tf.nn.rnn_cell.BasicRNNCell等
+* 获取初始化state: initail_state=cell.zero_state(size,tf.float32)
+* 使用tensorflow的unpack或unstack方法，把输入的tensor inputs转换成sequence:inputs=tf.unpack(inputs,axis=1) 
+× 使用rnn方法：outputs,state=tf.nn.rnn(cell,inputs,initial_state)
