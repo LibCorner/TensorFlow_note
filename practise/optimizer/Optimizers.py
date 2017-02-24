@@ -205,6 +205,7 @@ opt=tf.train.AdagradOptimizer(learning_rate=0.5,initial_accumulator_value=0.1)
 
 #计算梯度
 grad_vars=opt.compute_gradients(loss,var_list=[w,b])
+print('sssssssssssssssss',len(grad_vars))
 #对梯度进行约束
 caped_grads=[(tf.clip_by_value(g,-1.0,1.0),v) for g,v in grad_vars]
 #应用梯度
