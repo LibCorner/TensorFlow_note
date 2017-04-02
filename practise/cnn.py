@@ -12,6 +12,9 @@ y1=tf.nn.conv1d(x1,W,1,"SAME")
 y1=tf.expand_dims(input=y1,dim=1)
 #max pooling
 max1=tf.nn.max_pool(y1,[1,1,5,1],[1,1,1,1],"VALID")
+pool=max1
+s=tf.shape(pool)
+pool=tf.reshape(pool,[s[0],s[2],s[3]])
 
 
 #conv2d
@@ -25,6 +28,7 @@ sess.run(tf.initialize_all_variables())
 data=np.random.rand(5,10,100)
 print(sess.run(y1,feed_dict={x1:data}))
 print(sess.run(max1,feed_dict={x1:data}))
+print("pool",sess.run(pool,feed_dict={x1:data}))
 
 data2=np.random.rand(5,100,100,1)
 print(sess.run(y2,feed_dict={x2:data2}))

@@ -22,10 +22,11 @@ saver=tf.train.Saver()
 data=np.ones([batch_size,dim])
 with tf.Session() as sess:
     #加载
-    saver.restore(sess,"saver_wights.saver")
+    #saver.restore(sess,"saver_wights.saver")
     #加载保存的变量，就不能再初始化变量,否则加载就无效
     #sess.run(tf.initialize_all_variables())
+    sess.run(tf.global_variables_initializer())
     #保存
-    #saver.save(sess,"saver_wights.saver")
-    print sess.run(out,feed_dict={inputs:data})
+    saver.save(sess,"saver_wights1.saver")
+    print(sess.run(out,feed_dict={inputs:data}))
     
