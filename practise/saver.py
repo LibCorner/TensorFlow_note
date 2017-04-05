@@ -15,6 +15,8 @@ out=tf.matmul(inputs,w1)+b1
 
 w2,b2=get_variable(10,1)
 out=tf.matmul(out,w2)+b2
+
+#每次构建模型要使用tf.reset_default_graph()重置默认图，否则变量名会可能会出现不一致，导致restore失败。
 #saver
 #无参数，保存所有的变量,有参数保存指定变量
 #saver=tf.train.Saver([w1,b1,w2,b2])
