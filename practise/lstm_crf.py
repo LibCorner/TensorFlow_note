@@ -18,7 +18,12 @@ with tf.variable_scope("lstm"):
     lstm_cell_bw=tf.nn.rnn_cell.BasicLSTMCell(50,activation=tf.nn.tanh)
     
     (outputs_fw,outputs_bw),(final_state_fw,final_state_bw)=tf.nn.bidirectional_dynamic_rnn(cell_fw=lstm_cell_fw,
-                                                                                            cell_bw=lstm_cell_bw,inputs=embeded,sequence_length=word_length,dtype=tf.float32)
+                                                                                            cell_bw=lstm_cell_bw,
+                                                                                            inputs=embeded,
+                                                                                            sequence_length=word_length,
+                                                                                            dtype=tf.float32,
+                                                                                            parallel_iterations=1,
+                                                                                            swap_memory=True)
     
     context=tf.concat([outputs_fw,outputs_bw],axis=-1)
     
@@ -57,6 +62,22 @@ loss=tf.reduce_mean(-log_likelihood)
 optimizer=tf.train.AdamOptimizer(0.001)
 train_op=optimizer.minimize(loss)
 
+
+#为session配置显存
+gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.3)
+sess = tf.Session(config=tf.ConfigProto(
+allow_soft_placement=True, log_device_placement=True))
+
+sess.run(tf.global_variables_initializer())
+
+words=np.random.randint(0,10000,size=[32,10])
+seq_length=np.random.randint(5,10,size=[32])
+label=np.random.randint(0,4,size=[32,10])
+
+for i in range(100):
+    _,l=sess.run([train_op,loss],feed_dict={word_ids:words,word_length:seq_length,labels:label})
+    print(l)
+
 #预测
 '''
 tf.contrib.crf.viterbi_decode(score,transition_params)
@@ -67,15 +88,11 @@ transition_param: [num_tags,num_tags]
 viterbi: A [seq_len] list of integers, 包括得分最高的tag indices
 viterbi_score: Viterbi 序列解码的分数， float
 '''
-#viterbi_sequence,viterbi_score=tf.contrib.crf.viterbi_decode(scores,transition_params)
-
-sess=tf.Session()
-sess.run(tf.global_variables_initializer())
-
-words=np.random.randint(0,10000,size=[128,10])
-seq_length=np.random.randint(5,10,size=[128])
-label=np.random.randint(0,4,size=[128,10])
-
-for i in range(10):
-    _,loss=sess.run([train_op,loss],feed_dict={word_ids:words,word_length:seq_length,labels:label})
-    print(loss)
+score_seq,tps=sess.run([scores,transition_params],feed_dict={word_ids:words,word_length:seq_length})
+viterbi_scores=[]
+for score,leng in zip(score_seq,seq_length):
+    viterbi_sequence,viterbi_score=tf.contrib.crf.viterbi_decode(score[:leng],tps)
+    viterbi_scores.append(viterbi_score)  
+    print(viterbi_sequence)
+    
+print(label)
